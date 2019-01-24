@@ -157,6 +157,20 @@ body {
   background: $bg0;
   position: relative;
 
+  .unread {
+    position: sticky;
+    bottom: $spacing/2;
+    margin-right: $spacing/2;
+    text-align: right;
+    display: inline-block;
+    background: white;
+    color: $bg2;
+    padding: 0.8rem;
+    border-radius: 2rem;
+    flex: 0 0 auto;
+    align-self: flex-end;
+  }
+
   .events {
     display: flex;
     flex-direction: column;

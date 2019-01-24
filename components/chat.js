@@ -21,6 +21,13 @@ jdenticon.config = {
 let chat = create({
   displayName: "Chat",
 
+  getInitialState: function() {
+    return {
+      unread: 0,
+      eventCount: 0
+    }
+  },
+
   getSnapshotBeforeUpdate: function(oldProps, oldState) {
     let ref = this.state.ref
     if ((ref.scrollHeight - ref.offsetHeight) - ref.scrollTop < 100) { // Less than 100px from bottom
@@ -29,10 +36,21 @@ let chat = create({
     return null
   },
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps, prevState, shouldScroll) {
     let ref = this.state.ref
-    if (snapshot) { // scroll to bottom
+    let newEvents
+    if (this.props.events.length != this.state.eventCount) {
+      newEvents = this.props.events.length-this.state.eventCount
+      this.setState({eventCount: this.props.events.length})
+    } else {
+      return
+    }
+
+    if (shouldScroll) { // scroll to bottom
       ref.scrollTop = (ref.scrollHeight - ref.offsetHeight)
+      this.setState({unread: 0})
+    } else {
+      this.setState({unread: newEvents + this.state.unread})
     }
   },
 
@@ -72,6 +90,11 @@ let chat = create({
     return <div className="chat" ref={this.setRef}>
       <div className="events">
         {events}
+        {this.state.unread > 0 &&
+          <div className="unread">
+            {this.state.unread}
+          </div>
+        }
       </div>
     </div>
   }
